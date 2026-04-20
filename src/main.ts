@@ -7,7 +7,7 @@ async function bootstrap() {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   app.use(cookieParser());
   app.enableCors({
-    origin: true,
+    origin: "http://localhost:3001",
     credentials: true,
   });
   await app.listen(process.env.PORT ?? 3000);

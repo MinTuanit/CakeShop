@@ -1,7 +1,6 @@
-// eslint-disable @typescript-eslint/no-unsafe-call
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 
 export interface JwtPayload {
@@ -17,14 +16,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new Error('JWT_SECRET is not defined in environment variables');
     }
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: (req: { cookies?: { access_token?: string } }) => {
+        if (req?.cookies?.access_token) {
+          return req.cookies.access_token;
+        }
+        return null;
+      },
       ignoreExpiration: false,
       secretOrKey: jwtSecret,
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
-  async validate(payload: JwtPayload): Promise<{ userId: string; userphone: string }> {
+  validate(payload: JwtPayload): { userId: string; userphone: string } {
     return { userId: payload.sub, userphone: payload.userphone };
   }
 }
