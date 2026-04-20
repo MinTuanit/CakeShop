@@ -34,6 +34,9 @@ export class User {
 
   @Prop({ default: null })
   lastLogin?: Date;
+
+  @Prop({ default: null })
+  refreshToken?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

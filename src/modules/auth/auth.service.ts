@@ -31,9 +31,43 @@ export class AuthService {
     if (!isMatch) throw new UnauthorizedException('Sai thông tin đăng nhập');
     // Cập nhật lastLogin
     user.lastLogin = new Date();
+
+    // Tạo refresh token
+    const refreshPayload = { sub: user._id, phone: user.phone, role: user.role, type: 'refresh' };
+    const refreshToken = await this.jwtService.signAsync(refreshPayload, { expiresIn: '7d' });
+    user.refreshToken = refreshToken;
     await user.save();
+
     const payload = { sub: user._id, phone: user.phone, role: user.role };
     const access_token = await this.jwtService.signAsync(payload);
-    return { access_token, user: { _id: user._id, name: user.name, phone: user.phone, role: user.role } };
+    return {
+      access_token,
+      refresh_token: refreshToken,
+      user: { _id: user._id, name: user.name, phone: user.phone, role: user.role }
+    };
+  }
+
+  async refreshToken(refreshToken: string) {
+    interface RefreshPayload { sub: string; phone: string; role: string; type: string; }
+    let payload: RefreshPayload | undefined;
+    try {
+      payload = this.jwtService.verify<RefreshPayload>(refreshToken);
+    } catch {
+      throw new UnauthorizedException('Refresh token không hợp lệ');
+    }
+    if (!payload || payload.type !== 'refresh') {
+      throw new UnauthorizedException('Refresh token không hợp lệ');
+    }
+    const user = await this.userModel.findById(payload.sub);
+    if (!user || user.refreshToken !== refreshToken) {
+      throw new UnauthorizedException('Refresh token không hợp lệ');
+    }
+
+    const accessPayload = { sub: user._id, phone: user.phone, role: user.role };
+    const access_token = await this.jwtService.signAsync(accessPayload);
+    return {
+      access_token,
+      user: { _id: user._id, name: user.name, phone: user.phone, role: user.role }
+    };
   }
 }
