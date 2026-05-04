@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/app.module';
+import { setupSwagger } from '@/config/swagger.config';
 import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
@@ -10,6 +11,7 @@ async function bootstrap() {
     origin: "http://localhost:3000",
     credentials: true,
   });
+  setupSwagger(app);
   await app.listen(process.env.PORT ?? 3000);
   console.log(`Server is running on port ${process.env.PORT}`);
 }
