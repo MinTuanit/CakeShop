@@ -45,6 +45,18 @@ export class ProductController {
     example: 'socola',
     description: 'Tim theo ten san pham',
   })
+  @ApiQuery({
+    name: 'minPrice',
+    required: false,
+    example: 150000,
+    description: 'Gia thap nhat',
+  })
+  @ApiQuery({
+    name: 'maxPrice',
+    required: false,
+    example: 500000,
+    description: 'Gia cao nhat',
+  })
   @ApiOkResponse({
     description: 'Danh sach san pham',
     type: ProductResponseDto,
@@ -54,8 +66,10 @@ export class ProductController {
   findAll(
     @Query('category') category?: string,
     @Query('search') search?: string,
+    @Query('minPrice') minPrice?: string,
+    @Query('maxPrice') maxPrice?: string,
   ) {
-    return this.productService.findAll(category, search);
+    return this.productService.findAll(category, search, minPrice, maxPrice);
   }
 
   @ApiOperation({ summary: 'Lay chi tiet san pham' })
