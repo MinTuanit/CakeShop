@@ -46,7 +46,7 @@ export class ProductService {
     const product = await this.productModel.findByIdAndUpdate(
       id,
       updateProductDto,
-      { new: true, runValidators: true },
+      { returnDocument: 'after', runValidators: true },
     );
 
     if (!product) {

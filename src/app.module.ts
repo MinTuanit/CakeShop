@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from '@/config/db.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CartsModule } from './modules/carts/carts.module';
 import { ProductsModule } from './modules/products/products.module';
 import { UsersModule } from './modules/users/users.module';
 
@@ -12,6 +13,7 @@ import { UsersModule } from './modules/users/users.module';
     AuthModule,
     UsersModule,
     ProductsModule,
+    CartsModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
