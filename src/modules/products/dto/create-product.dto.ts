@@ -55,7 +55,21 @@ export class CreateProductDto {
   @IsString({ each: true })
   images?: string[];
 
-  @ApiPropertyOptional({ example: 10, minimum: 0 })
+  @ApiPropertyOptional({
+    type: [String],
+    example: ['socola', 'kem tuoi', 'bot mi', 'trung ga'],
+    description: 'Cac nguyen lieu chinh cua san pham',
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  mainIngredients?: string[];
+
+  @ApiPropertyOptional({
+    example: 20,
+    minimum: 0,
+    description: 'Ton kho cho san pham khong phai banh kem',
+  })
   @IsOptional()
   @IsNumber()
   @Min(0)

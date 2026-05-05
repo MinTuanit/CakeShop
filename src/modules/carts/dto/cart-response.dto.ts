@@ -19,8 +19,12 @@ export class CartProductResponseDto {
   @ApiPropertyOptional({ example: 'https://example.com/cake.jpg' })
   imageUrl?: string;
 
-  @ApiProperty({ example: 10, minimum: 0 })
-  stock!: number;
+  @ApiPropertyOptional({
+    example: 20,
+    minimum: 0,
+    description: 'Chi co voi san pham khong phai banh kem',
+  })
+  stock?: number;
 
   @ApiProperty({ example: true })
   isAvailable!: boolean;

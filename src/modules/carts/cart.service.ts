@@ -9,6 +9,7 @@ import {
   Product,
   ProductDocument,
 } from '@/modules/products/schema/product.schema';
+import { requiresStock } from '@/modules/products/product-kind';
 import { User, UserDocument } from '@/modules/users/schema/user.schema';
 import { AddCartItemDto } from './dto/add-cart-item.dto';
 import {
@@ -25,7 +26,7 @@ interface CartProductLean {
   price: number;
   category: string;
   imageUrl?: string;
-  stock: number;
+  stock?: number;
   isAvailable: boolean;
 }
 
@@ -196,12 +197,6 @@ export class CartService {
     return item;
   }
 
-  private ensureStockAvailable(product: ProductDocument, quantity: number) {
-    if (product.stock < quantity) {
-      throw new BadRequestException('So luong vuot qua ton kho san pham');
-    }
-  }
-
   private normalizeQuantity(value: unknown, defaultValue?: number): number {
     const quantity = value ?? defaultValue;
 
@@ -210,6 +205,16 @@ export class CartService {
     }
 
     return Number(quantity);
+  }
+
+  private ensureStockAvailable(product: ProductDocument, quantity: number) {
+    if (!requiresStock(product.category)) {
+      return;
+    }
+
+    if (product.stock === undefined || product.stock < quantity) {
+      throw new BadRequestException('So luong vuot qua ton kho san pham');
+    }
   }
 
   private async toCartResponse(cart: CartDocument): Promise<CartResponseDto> {
@@ -260,7 +265,7 @@ export class CartService {
       price: product.price,
       category: product.category,
       imageUrl: product.imageUrl,
-      stock: product.stock,
+      ...(requiresStock(product.category) ? { stock: product.stock } : {}),
       isAvailable: product.isAvailable,
     };
   }

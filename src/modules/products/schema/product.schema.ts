@@ -29,8 +29,11 @@ export class Product {
   @Prop({ type: [String], default: [] })
   images!: string[];
 
-  @Prop({ default: 0, min: 0 })
-  stock!: number;
+  @Prop({ type: [String], default: [] })
+  mainIngredients!: string[];
+
+  @Prop({ min: 0 })
+  stock?: number;
 
   @Prop({ default: true })
   isAvailable!: boolean;

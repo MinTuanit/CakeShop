@@ -28,8 +28,18 @@ export class ProductResponseDto {
   @ApiProperty({ type: [String], example: ['https://example.com/cake-1.jpg'] })
   images!: string[];
 
-  @ApiProperty({ example: 10, minimum: 0 })
-  stock!: number;
+  @ApiProperty({
+    type: [String],
+    example: ['socola', 'kem tuoi', 'bot mi', 'trung ga'],
+  })
+  mainIngredients!: string[];
+
+  @ApiPropertyOptional({
+    example: 20,
+    minimum: 0,
+    description: 'Chi co voi san pham khong phai banh kem',
+  })
+  stock?: number;
 
   @ApiProperty({ example: true })
   isAvailable!: boolean;
