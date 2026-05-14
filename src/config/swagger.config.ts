@@ -7,6 +7,8 @@ export function setupSwagger(app: INestApplication) {
     .setDescription('API documentation for CakeWeb backend')
     .setVersion('1.0')
     .addTag('products', 'Quan ly san pham banh kem')
+    .addTag('cart', 'Quan ly gio hang')
+    .addTag('orders', 'Quan ly dat hang')
     .addTag('auth', 'Dang ky, dang nhap va token')
     .addTag('users', 'Quan ly nguoi dung')
     .addCookieAuth(
